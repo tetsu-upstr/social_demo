@@ -1,36 +1,32 @@
 <?php  
 require 'config/config.php';
 
+// ログインしていれば、セッションの名前をDBと等しいか確認
+// mysqli_fetch_array — 結果の行を連想配列・数値添字配列あるいはその両方の形式で取得
 if (isset($_SESSION['username'])) {
   $userLoggedIn = $_SESSION['username'];
   $user_details_query = mysqli_query($con, "SELECT * FROM users WHERE username = '$userLoggedIn'");
   $user = mysqli_fetch_array($user_details_query);
-}
-else {
+} else {
+  // ログインしていなければ登録フォームにリダイレクト
   header("Location: register.php");
 }
-
 ?>
 
 <html>
 <head>
-	<title>Welcome to Swirlfeed</title>
-
-  <!-- Javascript -->
+	<title>Welcome to SNS</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="assets/js/bootstrap.js"></script>
-  
-  <!-- CSS -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-  
 </head>
 <body>
 
   <div class="top_bar">
     <div class="logo">
-      <a href="index.php">Swirlfeed!</a>
+      <a href="index.php">SNS</a>
     </div>
 
     <nav>
@@ -60,5 +56,3 @@ else {
   </div>
 
   <div class="wrapper">
-
-  

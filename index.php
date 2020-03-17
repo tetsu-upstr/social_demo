@@ -11,33 +11,32 @@ if (isset($_POST['post'])) {
 ?>
 	<div class="user_details column">
 		<a href="<?php echo $userLoggedIn; ?>"> <img src="<?php echo $user['profile_pic']; ?>" </a>
-
+		<!-- ユーザープロフィール左サイドバー -->
 		<div class="user_details_left_right">
-				<a href="<?php echo $userLoggedIn; ?>">
-				<?php 
-				echo $user['first_name'] . " " . $user['last_name'];
-
-				?>
-				</a>
+				<a href="<?php echo $userLoggedIn; ?>"><?php echo $user['first_name'] . " " . $user['last_name']; ?></a>
 				<br>
 				<?php
-					echo "Posts: " . $user['num_posts']. "<br>";
-					echo "Likes: " . $user['num_likes'];
+					echo "投稿: " . $user['num_posts']. "<br>";
+					echo "いいね: " . $user['num_likes'];
 				?>
 		</div>
-	
 	</div>
 
 	<div class="main_column column">
 		<form class="post_form" action="index.php" method="POST">
-			<textarea name="post_text" id="post_text" placeholder="Got something to say?"></textarea>
+			<textarea name="post_text" id="post_text" placeholder="いまどうしてる?"></textarea>
 			<input type="submit" name="post" id="post_button" value="Post">
 			<hr>
 		</form>
 
+		<!-- userクラスとメソッドの使用例 -->
+		<!-- <?php 
+		$user_obj = new User($con, $userLoggedIn);
+		echo $user_obj->getFirstAndLastName();
+		?> -->
+
 		<div class="posts_area"></div>
 		<img id="loading" src="assets/images/icons/loading.gif">
-
 	</div>
 
 	<script>
@@ -92,10 +91,7 @@ if (isset($_POST['post'])) {
 		}); // End (window).scroll(function()
 
 	});
-
-
 	</script>
-
 	</div>
 
 </body>

@@ -11,8 +11,6 @@ $error_array = array(); //Holds error messages
 
 if(isset($_POST['register_button'])){
 
-	//Registration form values
-
 	//First name
 	$fname = strip_tags($_POST['reg_fname']); //Remove html tags
 	$fname = str_replace(' ', '', $fname); //remove spaces
@@ -119,7 +117,7 @@ if(isset($_POST['register_button'])){
 
 		$query = mysqli_query($con, "INSERT INTO users VALUES (NULL, '$fname', '$lname', '$username', '$em', '$password', current_timestamp(), '$profile_pic', '0', '0', 'no', ',')");
 
-		var_dump($query);
+		// var_dump($query);
 
 		array_push($error_array, "<span style='color: #14C800;'>You're all set! Go ahead and login!</span><br>");
 

@@ -5,18 +5,20 @@ class Post {
 
   public function __construct($con, $user){
     $this->con = $con;
+    // Userクラスのインスタンスを$user_objに代入
     $this->user_obj = new User($con, $user);
   }
 
   public function submitPost($body, $user_to) {
     $body = strip_tags($body); // removes html tags
-    $body = mysqli_real_escape_string($this->con, $body);
+    $body = mysqli_real_escape_string($this->con, $body); // 「‘」や「“」などSQL 文で使用する文字列の特殊文字をエスケープ
 
     $body = str_replace('\r\n', '\n', $body);
-    $body = nl2br($body); // means new line to line breake (改行)
+    $body = nl2br($body); // means new line to line breake (改行タグ<br>を入れる)
 
-    $check_empty = preg_replace('/\s+/', '', $body); // deletes all spaces
+    $check_empty = preg_replace('/\s+/', '', $body); // 「\s+」は空白 deletes all spaces
 
+    // 空白でなければPostの処理を実行
     if ($check_empty != "") {
 
       // Current data and time
@@ -29,9 +31,9 @@ class Post {
         $user_to = "none";
       }
 
-      // insert post
+      // insert post (id(int), body(text), added_by(varchar), user_to(varchar), date_added(datetime), user_closed(varchar), deleted(varchar), likes(int))
       $query = mysqli_query($this->con, "INSERT INTO posts VALUES(NULL, '$body', '$added_by', '$user_to', '$date_added', 'no', 'no', '0')");
-      $returned_id = mysqli_insert_id($this->con);
+      $returned_id = mysqli_insert_id($this->con); // 直近のクエリで使用した自動生成の ID を返す
 
       // Insert notification
 
