@@ -208,7 +208,7 @@ class Post {
                         </div>
 
                         <div class='posted_by' style='color:#ACACAC;'>
-                          <a herf='$added_by'> $first_name $last_name </a> $user_to &nbsp;&nbsp;&nbsp;&nbsp;$time_message
+                          <a href='$added_by'> $first_name $last_name </a> $user_to &nbsp;&nbsp;&nbsp;&nbsp;$time_message
                         </div>
 
                         <div id='post_body'>
