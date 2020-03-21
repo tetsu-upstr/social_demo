@@ -6,11 +6,13 @@ include("includes/classes/Post.php");
 if (isset($_POST['post'])) {
 	$post = new Post($con, $userLoggedIn);
 	$post->submitPost($_POST['post_text'], 'none');
+	header("Location: index.php"); // これがないとページ更新毎にPOSTの値が投稿されてしまう
 }
 
 ?>
 	<div class="user_details column">
-		<a href="<?php echo $userLoggedIn; ?>"> <img src="<?php echo $user['profile_pic']; ?>" </a>
+		<a href="<?php echo $userLoggedIn; ?>"> <img src="<?php echo $user['profile_pic']; ?>"> </a>
+
 		<!-- ユーザープロフィール左サイドバー -->
 		<div class="user_details_left_right">
 				<a href="<?php echo $userLoggedIn; ?>"><?php echo $user['first_name'] . " " . $user['last_name']; ?></a>
@@ -35,10 +37,12 @@ if (isset($_POST['post'])) {
 		echo $user_obj->getFirstAndLastName();
 		?> -->
 
+		<!-- 投稿を下記jQueryのメソッドで読み込む -->
 		<div class="posts_area"></div>
 		<img id="loading" src="assets/images/icons/loading.gif">
 	</div>
 
+	<!-- ページをリロードせずにデーターベースにアクセス -->
 	<script>
 	var userLoggedIn = '<?php echo $userLoggedIn; ?>';
 
@@ -47,6 +51,7 @@ if (isset($_POST['post'])) {
 		$('#loading').show();
 
 		// Original ajax request for loading first posts
+		//data:はPostクラスの$data['page']
 		$.ajax({
 			url: "includes/handlers/ajax_load_posts.php",
 			type: "POST",
@@ -59,6 +64,7 @@ if (isset($_POST['post'])) {
 			}
 		});
 
+		// ページスクロールでの投稿の読み込み処理
 		$(window).scroll(function() {
 			var height = $('.posts_area').height(); // Div containing posts
 			var scroll_top = $(this).scrollTop();

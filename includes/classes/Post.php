@@ -44,15 +44,18 @@ class Post {
     }
   }
 
+  // ajax_load_posts.phpでインスタンス化
   public function loadPostsFriends($data, $limit) {
 
+    // 投稿の読み込み
     $page = $data['page'];
     $userLoggedIn = $this->user_obj->getUsername();
 
-    if($page == 1)
+    if($page == 1) {
       $start = 0;
-    else
-      $start = ($page -1) * $limit;
+    } else {
+      $start = ($page - 1) * $limit;
+    }
 
 
     $str = ""; // String to return
@@ -70,11 +73,10 @@ class Post {
         $added_by = $row['added_by'];
         $date_time = $row['date_added'];
 
-        //Prepare user_to string so it can be included even if not posted to a user
+        //user_toがnoneでなければ投稿にuser_toを付与（例：ミッキー to グーフィー）
         if ($row['user_to'] == "none") {
           $user_to = "";
-        }
-        else {
+        } else {
           $user_to_obj = new User($con, $row['user_to']);
           $user_to_name = $user_to_obj->getFirstAndLastName();
           $user_to = "to <a href='" . $row['user_to'] . "'>" . $user_to_name . "</a>";
@@ -86,13 +88,13 @@ class Post {
           continue;
         }
 
+        
         $user_logged_obj = new User($this->con, $userLoggedIn);
         if ($user_logged_obj->isFriend($added_by)) {
 
-
-
-            if ($num_iterations++ < $start)
+            if ($num_iterations++ < $start) {
               continue;
+            }
             
             //Once 10 posts have been loaded, break
             if ($count > $limit) {
@@ -108,93 +110,134 @@ class Post {
             $last_name = $user_row['last_name'];
             $profile_pic = $user_row['profile_pic'];
 
-            // Timeframe
+            ?>
+            
+            <script>
+              // コメントの表示・非表示
+              function toggle<?php echo $id; ?>() {
+
+                var target = $(event.target);
+                if (!target.is("a")) {
+                  var element = document.getElementById("toggleComment<?php echo $id; ?>");
+                
+                  if (element.style.display == "block") // show
+                      element.style.display = "none"; // hide
+                  else
+                      element.style.display ="block";
+                }
+
+                
+              }
+           </script>
+
+            <?php
+
+            // 投稿へのコメントのチェック
+            $comments_check = mysqli_query($this->con, "SELECT * FROM comments WHERE post_id='$id'");
+            $comments_check_num = mysqli_num_rows($comments_check);
+
+            // タイムフレーム
             $date_time_now = date("Y-m-d H:i:s");
-            $start_date = new DateTime($date_time); // Time of post
-            $end_date = new DateTime($date_time_now);  // Current time
-            $interval = $start_date->diff($end_date); // Difference between dates
-            if ($interval->y >= 1) {
+            $start_date = new DateTime($date_time); // 投稿時間
+            $end_date = new DateTime($date_time_now);  // 現在の時間
+            $interval = $start_date->diff($end_date); // 経過時間
+
+            // 投稿時間の表示形式
+            if($interval->y >= 1) {
               if($interval == 1)
-                $time_message = $interval->y . "year ago"; //1 year ago
-              else
-                $time_message = $interval->y.  "year ago"; //1+ years ago
+                $time_message = $interval->y . " year ago"; //1 year ago
+              else 
+                $time_message = $interval->y . " years ago"; //1+ year ago
             }
             else if ($interval-> m >= 1) {
-              if ($interval->d == 0) {
-                $days = "ago" ;
+              if($interval->d == 0) {
+                $days = " ago";
               }
-              else if ($interval->d == 1) {
-                $days = $interval->d . "day ago";
-              }
-              else {
-                $days = $interval->d . "days ago";
-              }
-
-              if ($interval->m == 1) {
-                $time_message = $interval->m . " month" . $days;
+              else if($interval->d == 1) {
+                $days = $interval->d . " day ago";
               }
               else {
-                $time_message = $interval->m . " months" . $days;
+                $days = $interval->d . " days ago";
               }
+  
+  
+              if($interval->m == 1) {
+                $time_message = $interval->m . " month". $days;
+              }
+              else {
+                $time_message = $interval->m . " months". $days;
+              }
+  
             }
             else if($interval->d >= 1) {
-              if ($interval->d == 1) {
+              if($interval->d == 1) {
                 $time_message = "Yesterday";
               }
               else {
-                $time_message = $interval->d . "days ago";
+                $time_message = $interval->d . " days ago";
               }
             }
-            else if ($interval->h >= 1) {
-              if ($interval->h == 1) {
-                $time_message = $interval->h . "hour ago";
+            else if($interval->h >= 1) {
+              if($interval->h == 1) {
+                $time_message = $interval->h . " hour ago";
               }
               else {
-                $time_message = $interval->h . "hours ago";
+                $time_message = $interval->h . " hours ago";
               }
             }
-            else if ($interval->i >= 1) {
-              if ($interval->i == 1) {
-                $time_message = $interval->i . "minute ago";
+            else if($interval->i >= 1) {
+              if($interval->i == 1) {
+                $time_message = $interval->i . " minute ago";
               }
               else {
-                $time_message = $interval->i . "minutes ago";
+                $time_message = $interval->i . " minutes ago";
               }
             }
+            else {
+              if($interval->s < 30) {
+                $time_message = "Just now";
+              }
               else {
-                if ($interval->s < 30) {
-                  $time_message = "Just now";
-                }
-                else {
-                  $time_message = $interval->s . "seconds ago";
-                }
-            } 
+                $time_message = $interval->s . " seconds ago";
+              }
+            }
 
-            $str .= "<div class='status_post'>
+            $str .= "<div class='status_post' onClick='javascript:toggle$id()'>
                         <div class='post_profile_pic'>
                           <img src='$profile_pic' width='50'>
                         </div>
 
                         <div class='posted_by' style='color:#ACACAC;'>
                           <a herf='$added_by'> $first_name $last_name </a> $user_to &nbsp;&nbsp;&nbsp;&nbsp;$time_message
-                        </div> 
+                        </div>
+
                         <div id='post_body'>
-                            $body
-                            <br>
+                          $body
+                          <br>
+                          <br>
+                          <br>
+                        </div>
+
+                        <div class='newsfeedPostOptions'>
+                          コメント件数($comments_check_num)&nbsp;&nbsp;&nbsp;&nbsp;
+                          <iframe src='like.php?post_id=$id' scrolling='no'></iframe>
                         </div>
                       
+                      </div>
+                      <div class='post_comment' id='toggleComment$id' style='display:none;'>
+                        <iframe src='comment_frame.php?post_id=$id' id='comment_iframe' frameborder='0'></iframe>
                       </div>
                       <hr>";
       }
 
     } //End while loop
 
-    if ($count > $limit)
+    if ($count > $limit) {
       $str .= "<input type='hidden' class='nextPage' value='" . ($page + 1) . "'>
                   <input type='hidden' class='noMorePosts' value='false'>";
-    else
+    } else {
       $str .= "<input type='hidden' class='noMorePosts' value='true'><p style='text-align: center;'> No more posts to show! </p>";
-
+    }
 
   }
 
