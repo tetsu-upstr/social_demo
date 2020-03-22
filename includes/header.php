@@ -1,5 +1,7 @@
 <?php  
 require 'config/config.php';
+include("includes/classes/User.php");
+include("includes/classes/Post.php");
 
 // ログインしていれば、セッションの名前をDBと等しいか確認
 // mysqli_fetch_array — 結果の行を連想配列・数値添字配列あるいはその両方の形式で取得
@@ -15,9 +17,13 @@ if (isset($_SESSION['username'])) {
 
 <html>
 <head>
-	<title>Welcome to SNS</title>
+  <title>Welcome to SNS</title>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="assets/js/bootstrap.js"></script>
+  <script src="assets/js/bootbox.min.js"></script>
+  <script src="assets/js/demo.js"></script>
+
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="assets/css/style.css">
@@ -42,7 +48,7 @@ if (isset($_SESSION['username'])) {
       <a href="#">
       <i class="fa fa-bell fa-lg"></i>
       </a>
-      <a href="#">
+      <a href="request.php">
       <i class="fa fa-users fa-lg"></i>
       </a>
       <a href="#">
