@@ -13,7 +13,8 @@ if (isset($_POST['post'])) {
 
 		<!-- ユーザープロフィール左サイドバー -->
 		<div class="user_details_left_right">
-				<a href="<?php echo $userLoggedIn; ?>"><?php echo $user['first_name'] . " " . $user['last_name']; ?></a>
+				<a href="<?php echo $userLoggedIn; ?>">
+				<?php echo $user['first_name'] . " " . $user['last_name']; ?></a>
 				<br>
 				<?php
 					echo "投稿: " . $user['num_posts']. "<br>";
@@ -38,6 +39,7 @@ if (isset($_POST['post'])) {
 		<!-- 投稿を下記jQueryのメソッドで読み込む -->
 		<div class="posts_area"></div>
 		<img id="loading" src="assets/images/icons/loading.gif">
+
 	</div>
 
 	<!-- ページをリロードせずにデーターベースにアクセス -->
@@ -64,37 +66,38 @@ if (isset($_POST['post'])) {
 
 		// ページスクロールでの投稿の読み込み処理
 		$(window).scroll(function() {
-			var height = $('.posts_area').height(); // Div containing posts
+			var height = $('.posts_area').height(); //Div containing posts
 			var scroll_top = $(this).scrollTop();
 			var page = $('.posts_area').find('.nextPage').val();
 			var noMorePosts = $('.posts_area').find('.noMorePosts').val();
 
 			if ((document.body.scrollHeight == document.body.scrollTop + window.innerHeight) && noMorePosts == 'false') {
 				$('#loading').show();
-			
+
 				var ajaxReq = $.ajax({
-						url: "includes/handlers/ajax_load_posts.php",
-						type: "POST",
-						data: "page=" + page + "&userLoggedIn=" + userLoggedIn,
-						cache:false,
+					url: "includes/handlers/ajax_load_posts.php",
+					type: "POST",
+					data: "page=" + page + "&userLoggedIn=" + userLoggedIn,
+					cache:false,
 
-						success: function(response) {
-							$('.posts_area').find('.nextPage').remove(); // Removes current .nextpage
-							$('.posts_area').find('.noMorePosts').remove(); 
+					success: function(response) {
+						$('.posts_area').find('.nextPage').remove(); //Removes current .nextpage 
+						$('.posts_area').find('.noMorePosts').remove(); //Removes current .nextpage 
 
-
-							$('#loading').hide();
-							$('.posts_area').append(response);
-						}
+						$('#loading').hide();
+						$('.posts_area').append(response);
+					}
 				});
 
-			} //End if
+			} //End if 
 
 			return false;
 
-		}); // End (window).scroll(function()
+		}); //End (window).scroll(function())
+
 
 	});
+
 	</script>
 	</div>
 

@@ -80,12 +80,21 @@ if (isset($_POST['respond_request'])) {
 
 		<input type="submit" class="deep_blue" data-toggle="modal" data-target="#post_form" value="Post something">
 
+			<?php
+			if ($userLoggedIn != $username) {
+				echo '<dic class="profile_info_bottom">';
+					echo $logged_in_user_obj->getMutualFriends($username) . "Mutual Friends";
+				echo '</div>';
+			}
+
+			?>
+
 	</div>
 
-	<div class="main_column column">
-		<?php echo $username; ?>
+	<div class="profile_main_column column">
 
-
+		<div class="posts_area"></div>
+		<img id="loading" src="assets/images/icons/loading.gif">
 
 
 </div>

@@ -329,5 +329,8 @@ textarea:focus {
 
 }
 
-
-
+.profile_main_column {
+  min-width: 675px;
+  float: left;
+  
+}
