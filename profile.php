@@ -83,6 +83,7 @@ if (isset($_POST['respond_request'])) {
 			<?php
 			if ($userLoggedIn != $username) {
 				echo '<dic class="profile_info_bottom">';
+					// 共通の友達
 					echo $logged_in_user_obj->getMutualFriends($username) . "Mutual Friends";
 				echo '</div>';
 			}

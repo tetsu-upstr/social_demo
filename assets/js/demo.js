@@ -19,3 +19,10 @@ $(document).ready(function() {
   });
 
 });
+
+function getUser(value, user) {
+  $.post("includes/handlers/ajax_friend_seach.php", {query:value, userLoggedIn:user}, function(data) {
+    // messages.phpの<div class='results'></div>
+    $(".results").html(data);
+  })
+}

@@ -2,6 +2,7 @@
 require 'config/config.php';
 include("includes/classes/User.php");
 include("includes/classes/Post.php");
+include("includes/classes/message.php");
 
 // ログインしていれば、セッションの名前をDBと等しいか確認
 // mysqli_fetch_array — 結果の行を連想配列・数値添字配列あるいはその両方の形式で取得
